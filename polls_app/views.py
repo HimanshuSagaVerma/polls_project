@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render
 from django.http import HttpResponse
-from polls_app.models import Polls
+from polls_app.models import Polls, Profile
 from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -92,3 +92,32 @@ class StudentApi(View):
         msg = 'i am in delete method'
         print msg
         return HttpResponse(msg)
+
+
+def list_all_polls_on_web(request):
+    # return HttpResponse("adfasfsfas")
+    template_name = "polls/list_all_polls_on_web.html"
+    context = {}
+    all_polls = Polls.objects.all()
+    context['all_polls'] = all_polls
+    return render(request, template_name, context)
+    # return render(request, "polls/list_all_polls_on_web.html", {"all_polls": all_polls } )
+
+
+def my_first_form(request):
+    template_name = "polls/my_first_form.html"
+    context = {}
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        print 'username is: %s' % username
+        print 'password is: %s' % password 
+
+        Profile.objects.create(
+            username=username,
+            password=password
+        )
+    return render(request, template_name, context)
+
